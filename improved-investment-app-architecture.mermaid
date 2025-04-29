@@ -1,0 +1,137 @@
+flowchart TB
+    subgraph Client
+        Browser["웹 브라우저"]
+        style Browser fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000,font-weight:bold
+    end
+    
+    subgraph "Web Server"
+        Nginx["Nginx/Apache"]
+        Gunicorn["Gunicorn (WSGI)"]
+        
+        style Nginx fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000,font-weight:bold
+        style Gunicorn fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000,font-weight:bold
+    end
+    
+    subgraph "Frontend"
+        HTML["HTML/CSS"]
+        JavaScript["JavaScript"]
+        ChartJS["Chart.js 데이터 시각화"]
+        AJAX["AJAX 비동기 처리"]
+        
+        style HTML fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style JavaScript fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style ChartJS fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style AJAX fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+    end
+    
+    subgraph "Backend (Flask)"
+        FlaskApp["Flask 애플리케이션"]
+        
+        subgraph "Routes"
+            MainRoutes["메인 라우트"]
+            AuthRoutes["인증 라우트"]
+            DashboardRoutes["대시보드 라우트"]
+        end
+        
+        subgraph "API"
+            UsersAPI["사용자 API"]
+            InvestmentsAPI["투자 정보 API"]
+            PortfoliosAPI["포트폴리오 API"]
+            NewsAPI["뉴스 API"]
+        end
+        
+        subgraph "Services"
+            PortfolioService["포트폴리오 서비스"]
+            InvestmentService["투자 서비스"]
+            NewsService["뉴스 서비스"]
+        end
+        
+        subgraph "Flask Extensions"
+            FlaskLogin["Flask-Login (인증)"]
+            FlaskSQLAlchemy["Flask-SQLAlchemy (ORM)"]
+            FlaskWTF["Flask-WTF (폼)"]
+        end
+        
+        style FlaskApp fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000,font-weight:bold
+        style MainRoutes fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style AuthRoutes fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style DashboardRoutes fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style UsersAPI fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style InvestmentsAPI fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style PortfoliosAPI fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style NewsAPI fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style PortfolioService fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style InvestmentService fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style NewsService fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style FlaskLogin fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style FlaskSQLAlchemy fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style FlaskWTF fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+    end
+    
+    subgraph "Database (MySQL)"
+        MySQL[(MySQL DB)]
+        
+        subgraph "Tables"
+            Users[("users")]
+            InvestmentTypes[("investment_types")]
+            Portfolios[("portfolios")]
+            PortfolioItems[("portfolio_items")]
+            HistoricalData[("historical_data")]
+            NewsItems[("news_items")]
+        end
+        
+        style MySQL fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000,font-weight:bold
+        style Users fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style InvestmentTypes fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style Portfolios fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style PortfolioItems fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style HistoricalData fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+        style NewsItems fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000,font-weight:bold
+    end
+    
+    Browser <--> Nginx
+    Nginx <--> Gunicorn
+    
+    Nginx --> HTML
+    Nginx --> JavaScript
+    Nginx --> ChartJS
+    
+    JavaScript <--> ChartJS
+    JavaScript <--> AJAX
+    
+    AJAX <--> Nginx
+    
+    Gunicorn <--> FlaskApp
+    
+    FlaskApp --> MainRoutes
+    FlaskApp --> AuthRoutes
+    FlaskApp --> DashboardRoutes
+    FlaskApp --> UsersAPI
+    FlaskApp --> InvestmentsAPI
+    FlaskApp --> PortfoliosAPI
+    FlaskApp --> NewsAPI
+    
+    MainRoutes --> PortfolioService
+    AuthRoutes --> FlaskLogin
+    DashboardRoutes --> PortfolioService
+    DashboardRoutes --> InvestmentService
+    DashboardRoutes --> NewsService
+    
+    UsersAPI --> FlaskLogin
+    InvestmentsAPI --> InvestmentService
+    PortfoliosAPI --> PortfolioService
+    NewsAPI --> NewsService
+    
+    FlaskLogin --> FlaskSQLAlchemy
+    PortfolioService --> FlaskSQLAlchemy
+    InvestmentService --> FlaskSQLAlchemy
+    NewsService --> FlaskSQLAlchemy
+    
+    FlaskSQLAlchemy --> MySQL
+    
+    MySQL --> Users
+    MySQL --> InvestmentTypes
+    MySQL --> Portfolios
+    MySQL --> PortfolioItems
+    MySQL --> HistoricalData
+    MySQL --> NewsItems
